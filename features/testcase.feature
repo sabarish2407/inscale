@@ -3,6 +3,7 @@ Feature: Inscale
     Background: Opening browser
         Given I have opened the browser
 
+    @scenario1
     Scenario Outline: Login as bank manager
         When user enter the website URL
         And user click on the bank manager button
@@ -19,8 +20,7 @@ Feature: Inscale
             | Minka         | Jackson        | A897N450 |
             | Jackson       | Connely        | L789C349 |
 
-        And verify customers
-
+    @scenario1
     Scenario Outline: Deleting the customer
         And verify customers
         Then delete customers <first_name> and <last_name>
@@ -30,7 +30,7 @@ Feature: Inscale
             | Jackson       | Frank         | L789C349 |
             | Christopher   | Connely       | L789C349 |
 
-    @run
+    @scenario2
     Scenario: Login as Customer
         When user enter the website URL
         And user click on the customer login button
@@ -43,3 +43,18 @@ Feature: Inscale
         And I perform a debit transaction of "3000"
         And I click on withdraw button
         And check if current balance is "47000"
+        And I perform a debit transaction of "2000"
+        And I click on withdraw button
+        And check if current balance is "45000"
+        And I perform a credit transaction of "5000"
+        And I click on deposit button
+        And check if current balance is "50000"
+        And I perform a debit transaction of "10000"
+        And I click on withdraw button
+        And check if current balance is "40000"
+        And I perform a debit transaction of "15000"
+        And I click on withdraw button
+        And check if current balance is "25000"
+        And I perform a credit transaction of "1500"
+        And I click on deposit button
+        And check if current balance is "26500"

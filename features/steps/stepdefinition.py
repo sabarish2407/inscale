@@ -49,7 +49,7 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('ADD_CUSTOMER')).click()
-        time.sleep(5)
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to click customers"+ str(e))
 
@@ -64,9 +64,9 @@ def step_impl(context, first_name, last_name, postcode):
         driver.find_element("xpath", get_env('POSTCODE')).send_keys(postcode)
         time.sleep(1)
         driver.find_element("xpath", get_env('SUBMIT')).click()
-        time.sleep(3)
+        time.sleep(2)
         driver.switch_to.alert.accept()
-        time.sleep(3)
+        time.sleep(2)
     except Exception as e:
        logging.error("Something went wrong in adding customer"+ str(e))
 
@@ -75,7 +75,7 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('CUSTOMERS')).click()
-        time.sleep(3)
+        time.sleep(2)
         table = driver.find_element("xpath", get_env('CUSTOMERS_TABLE'))
         rows = table.find_elements(By.TAG_NAME, "tr")
         first_names = ["Christopher", "Frank", "Christopher", "Connely", "Jackson", "Minka", "Jackson"]
@@ -84,7 +84,7 @@ def step_impl(context):
             cells = row.find_elements(By.TAG_NAME, "td")
             assert cells[0].text in first_names, f"Expected '{cells[0].text}' is added to the customer"
             assert cells[1].text in last_names , f"Expected '{cells[1].text}' is added to the customer"
-        time.sleep(10)
+        time.sleep(3)
     except Exception as e:
        logging.error("Customer verification failed"+ str(e))
 
@@ -106,7 +106,7 @@ def step_impl(context, first_name, last_name):
                 driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/div/div/table/tbody/tr[" + str(idx) + "]/td[5]/button").click()
             idx += 1 
         print("idx ====", idx)
-        time.sleep(10)
+        time.sleep(3)
 
     except Exception as e:
        logging.error("unable to delete customers"+ str(e))
@@ -136,7 +136,7 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('LOGIN')).click()
-        time.sleep(5)
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to click on login button"+ str(e))
 
@@ -145,11 +145,11 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('SELECT_NUMBER')).click()
-        time.sleep(3)
+        time.sleep(2)
         driver.find_element("xpath", get_env('SELECT_1003')).click()
-        time.sleep(3)
+        time.sleep(2)
         driver.find_element("xpath", "//body//div[@class='ng-scope']//div[@class='ng-scope']//div[2]").click()
-        time.sleep(5)
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to select option from dropdown"+ str(e))
 
@@ -158,9 +158,9 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('DEPOSIT')).click()
-        time.sleep(3)
-        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys("50000")
-        time.sleep(3)
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_1'))
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to perform the transaction"+ str(e))
 
@@ -169,7 +169,7 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('DEPOSIT_BUTTON')).click()
-        time.sleep(3)
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to click on deposit button"+ str(e))
 
@@ -188,9 +188,9 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('WITHDRAWAL')).click()
-        time.sleep(3)
-        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys("3000")
-        time.sleep(3)
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_2'))
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to perform the transaction"+ str(e))
 
@@ -199,7 +199,7 @@ def step_impl(context):
     global driver
     try:
         driver.find_element("xpath", get_env('WITHDRAW_BUTTON')).click()
-        time.sleep(3)
+        time.sleep(2)
     except Exception as e:
        logging.error("unable to click on withdraw button"+ str(e))
 
@@ -209,6 +209,102 @@ def step_impl(context):
     try:
         balance_amt = driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/strong[2]").text
         assert int(balance_amt) == 47000
+    except AssertionError as e:
+        logging.error("Current balance is not being matched"+ str(e))
+        raise AssertionError
+
+
+@when(u'I perform a debit transaction of "2000"')
+def step_impl(context):
+    global driver
+    try:
+        driver.find_element("xpath", get_env('WITHDRAWAL')).click()
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_3'))
+        time.sleep(2)
+    except Exception as e:
+       logging.error("unable to perform the transaction"+ str(e))
+
+@when(u'check if current balance is "45000"')
+def step_impl(context):
+    global driver
+    try:
+        balance_amt = driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/strong[2]").text
+        assert int(balance_amt) == 45000
+    except AssertionError as e:
+        logging.error("Current balance is not being matched"+ str(e))
+        raise AssertionError
+
+@when(u'I perform a credit transaction of "5000"')
+def step_impl(context):
+    global driver
+    try:
+        driver.find_element("xpath", get_env('DEPOSIT')).click()
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_4'))
+        time.sleep(2)
+    except Exception as e:
+       logging.error("unable to perform the transaction"+ str(e))
+
+@when(u'I perform a debit transaction of "10000"')
+def step_impl(context):
+    global driver
+    try:
+        driver.find_element("xpath", get_env('WITHDRAWAL')).click()
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_5'))
+        time.sleep(2)
+    except Exception as e:
+       logging.error("unable to perform the transaction"+ str(e))
+
+@when(u'check if current balance is "40000"')
+def step_impl(context):
+    global driver
+    try:
+        balance_amt = driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/strong[2]").text
+        assert int(balance_amt) == 40000
+    except AssertionError as e:
+        logging.error("Current balance is not being matched"+ str(e))
+        raise AssertionError
+
+@when(u'I perform a debit transaction of "15000"')
+def step_impl(context):
+    global driver
+    try:
+        driver.find_element("xpath", get_env('WITHDRAWAL')).click()
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_6'))
+        time.sleep(2)
+    except Exception as e:
+       logging.error("unable to perform the transaction"+ str(e))
+
+@when(u'check if current balance is "25000"')
+def step_impl(context):
+    global driver
+    try:
+        balance_amt = driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/strong[2]").text
+        assert int(balance_amt) == 25000
+    except AssertionError as e:
+        logging.error("Current balance is not being matched"+ str(e))
+        raise AssertionError
+
+@when(u'I perform a credit transaction of "1500"')
+def step_impl(context):
+    global driver
+    try:
+        driver.find_element("xpath", get_env('DEPOSIT')).click()
+        time.sleep(2)
+        driver.find_element("xpath", get_env('ENTER_AMOUNT')).send_keys(get_env('TXN_7'))
+        time.sleep(2)
+    except Exception as e:
+       logging.error("unable to perform the transaction"+ str(e))
+
+@when(u'check if current balance is "26500"')
+def step_impl(context):
+    global driver
+    try:
+        balance_amt = driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/strong[2]").text
+        assert int(balance_amt) == 26500
     except AssertionError as e:
         logging.error("Current balance is not being matched"+ str(e))
         raise AssertionError
