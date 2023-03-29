@@ -99,13 +99,10 @@ def step_impl(context, first_name, last_name):
         idx = 6
         for row in rows[6:]:
             cells = row.find_elements(By.TAG_NAME, "td")
-            print(cells, "cells= ====")
             driver.execute_script("arguments[0].scrollIntoView();", cells[0])
-
             if cells[0].text == first_name and cells[1].text == last_name:
                 driver.find_element("xpath", "/html/body/div/div/div[2]/div/div[2]/div/div/table/tbody/tr[" + str(idx) + "]/td[5]/button").click()
             idx += 1 
-        print("idx ====", idx)
         time.sleep(3)
 
     except Exception as e:
